@@ -9,7 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Vision">
-        <activity android:name=".HospitalActivity"></activity>
+        <activity android:name=".UserActivity" />
+        <activity android:name=".PoliceActivity" />
+        <activity android:name=".HospitalActivity" />
         <activity android:name=".SignInActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
