@@ -51,6 +51,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
   }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+
+        if (currentUser != null) {
+            updateUI();
+        }
+    }
+
+    private void updateUI() {
+        startActivity(new Intent(MainActivity.this, UserActivity.class));
+    }
+
     private void registerUser(){
         final String email = editTextEmail.getText().toString().trim();
         final String password=editTextPassword.getText().toString().trim();
@@ -188,17 +204,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             break;
 
             case R.id.textviewlogin:
-                startActivity(new Intent(this, MainActivity.class ));
+                startActivity(new Intent(this, SignInActivity.class ));
                 break;
         }
     }
 
-//    public void openUserActivity() {
-//        Intent intent = new Intent(this, MainActivity.class);
-//        startActivity(intent);
-//    }
-//    public void openSignInActivity() {
-//        Intent intent = new Intent(this, SignInActivity.class);
-//        startActivity(intent);
-//    }
+
 }
