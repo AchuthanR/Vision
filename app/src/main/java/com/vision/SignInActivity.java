@@ -61,7 +61,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             updateUI();
         }
     }
-
     private void updateUI() {
         startActivity(new Intent(SignInActivity.this, UserActivity.class));
     }
@@ -140,8 +139,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             }
         });
     }
-
-
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
