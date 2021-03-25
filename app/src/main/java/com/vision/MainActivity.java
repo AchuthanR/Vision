@@ -10,9 +10,6 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-import android.widget.Button;
-import android.widget.TextView;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -32,8 +29,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     EditText editTextEmail, editTextPassword,editTextName,editTextAge,editTextVehicleRegNo;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
-    private TextView text;
-    private Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,21 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.button2).setOnClickListener(this);
         findViewById(R.id.textviewlogin).setOnClickListener(this);
 
-        text = (TextView) findViewById(R.id.textviewlogin);
-        text.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openSignInActivity();
-            }
-        });
-        button = (Button) findViewById(R.id.button2);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openUserActivity();
-            }
-        });
-    }
+  }
 
     private void registerUser(){
         final String email = editTextEmail.getText().toString().trim();
@@ -212,12 +193,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    public void openUserActivity() {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-    }
-    public void openSignInActivity() {
-        Intent intent = new Intent(this, SignInActivity.class);
-        startActivity(intent);
-    }
+//    public void openUserActivity() {
+//        Intent intent = new Intent(this, MainActivity.class);
+//        startActivity(intent);
+//    }
+//    public void openSignInActivity() {
+//        Intent intent = new Intent(this, SignInActivity.class);
+//        startActivity(intent);
+//    }
 }
