@@ -43,13 +43,9 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
 
         mAuth = FirebaseAuth.getInstance();
 
-
-
-
-
-
-
         findViewById(R.id.logout3).setOnClickListener(this);
+
+
         //button for push notification
         findViewById(R.id.Notificationbtn).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,11 +64,11 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
 
                         Log.d("Aadi","inside dataSnapshot");
 
-                        String token =snapshot.child("police1").child("userToken").getValue().toString();
+                        String token =snapshot.child("police2").child("userToken").getValue().toString();
 
                         Log.d("Aadi","token is"+token);
 
-                        FcmNotificationsSender notificationsSender=new FcmNotificationsSender("/topics/all","TITLE","BODY",getApplicationContext(),UserActivity.this);
+                        FcmNotificationsSender notificationsSender=new FcmNotificationsSender(token,"TITLE","BODY",getApplicationContext(),UserActivity.this);
 
                         notificationsSender.SendNotifications();
 
