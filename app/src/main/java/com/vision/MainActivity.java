@@ -170,22 +170,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                if(!(dataSnapshot.child("users").child(userId).exists()))
+                if(!(dataSnapshot.child("users").child(name).exists()))
                 {
                     Log.i("part","entered inside if not exists!");
                     HashMap<String,Object> userdataMap= new HashMap<>();
                     userdataMap.put("email",email);
                     userdataMap.put("password",password);
-                    userdataMap.put("name",name);
+                    //userdataMap.put("name",name);
                     userdataMap.put("age",age);
                     userdataMap.put("vehicleRegNo",vehicleRegNo);
                     Log.d("Aaditya","this is inside the datasnapshot " + tokena);
                     userdataMap.put("userToken", tokena);
+                    userdataMap.put("Status", 0);
 
 
 
 
-                    root.child("users").child(userId).updateChildren(userdataMap)
+                    root.child("users").child(name).updateChildren(userdataMap)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {

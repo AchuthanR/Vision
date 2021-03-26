@@ -42,25 +42,60 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         FirebaseMessaging.getInstance().subscribeToTopic("all");
 
         mAuth = FirebaseAuth.getInstance();
+
+
+
+
+
+
+
         findViewById(R.id.logout3).setOnClickListener(this);
+        //button for push notification
+        findViewById(R.id.Notificationbtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                mDatabase=FirebaseDatabase.getInstance().getReference().child("users");
+                mDatabase.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+
+
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+
+
+
+
+
+
+
+
+
+
+                //Push NOtification Part
+                String token="";
+                //this is the method to create a new notification. We have to put all the details inside this
+                FcmNotificationsSender notificationsSender=new FcmNotificationsSender(token,"TITLE","BODY",
+                        getApplicationContext(),UserActivity.this);
+
+                notificationsSender.SendNotifications();
+            }
+        });
     }
 
 
-    public void PushNotification(){
 
 
-        String token="token of the police";
-        //this is the method to create a new notification. We have to put all the details inside this
-        FcmNotificationsSender notificationsSender=new FcmNotificationsSender(token,"TITLE","BODY",
-                getApplicationContext(),UserActivity.this);
-
-        notificationsSender.SendNotifications();
-
-
-
-
-
-    }
 
 
 
