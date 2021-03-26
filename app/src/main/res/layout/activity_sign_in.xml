@@ -45,12 +45,12 @@
         android:hint="Password"
         android:importantForAutofill="no"
         android:inputType="textPassword"
-        app:layout_constraintBottom_toTopOf="@+id/login"
+        app:layout_constraintBottom_toTopOf="@+id/sync"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/login"
+        android:id="@+id/sync"
         android:layout_width="347dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="240dp"
@@ -72,6 +72,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login" />
+        app:layout_constraintTop_toBottomOf="@+id/sync" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

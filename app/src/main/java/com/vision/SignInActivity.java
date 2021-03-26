@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
@@ -23,11 +22,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -46,7 +40,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         //progressBar = (ProgressBar) findViewById(R.id.progressbar);
 
         findViewById(R.id.signup_text).setOnClickListener((View.OnClickListener) this);
-        findViewById(R.id.login).setOnClickListener((View.OnClickListener) this);
+        findViewById(R.id.sync).setOnClickListener((View.OnClickListener) this);
 
     }
 
@@ -147,7 +141,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                 startActivity(new Intent(this, MainActivity.class));
                 break;
 
-            case R.id.login:
+            case R.id.sync:
                 userLogin();
                 break;
         }
