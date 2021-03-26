@@ -29,6 +29,7 @@ import android.os.Bundle;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class UserActivity extends AppCompatActivity implements View.OnClickListener {
     private FirebaseAuth mAuth;
@@ -38,9 +39,32 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
 
+        FirebaseMessaging.getInstance().subscribeToTopic("all");
+
         mAuth = FirebaseAuth.getInstance();
         findViewById(R.id.logout3).setOnClickListener(this);
     }
+
+
+    public void PushNotification(){
+
+
+        String token="token of the police";
+        //this is the method to create a new notification. We have to put all the details inside this
+        FcmNotificationsSender notificationsSender=new FcmNotificationsSender(token,"TITLE","BODY",
+                getApplicationContext(),UserActivity.this);
+
+        notificationsSender.SendNotifications();
+
+
+
+
+
+    }
+
+
+
+
 
     private void Logout() {
         Log.i("Srini","insidelogout");

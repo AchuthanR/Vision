@@ -21,8 +21,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -30,12 +34,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
 
+        FirebaseMessaging.getInstance().subscribeToTopic("all");
         editTextEmail= findViewById(R.id.editTextEmail);
         editTextPassword= findViewById(R.id.editTextPassword);
         editTextName=findViewById(R.id.edittextname);
@@ -108,12 +114,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (task.isSuccessful()) {
 
                     finish();
-                    Log.i("part","firebase authentication is over!");
-                    validateCredentials(email,password,name,age,vehicleRegNo);
+
+                    Log.d("Aaditya","firebase authentication is over!...going towards token creation");
+
+                    //token creation
+
+                    // fcm settings for perticular user
+
+                    FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                                    if (task.isSuccessful()) {
+
+                                        final String token = Objects.requireNonNull(task.getResult()).getToken();
+                                        Log.d("Aaditya","token "+ token);
+                                        validateCredentials(email,password,name,age,vehicleRegNo,token);
+                                    }
+
+                                }
+                            });
                     Log.i("part","validation is over!");
-
-
-
 //                    String email = editTextEmail.getText().toString().trim();
 //                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 //                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users");
@@ -137,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    private void validateCredentials(final String email, final String password,final String name, final String age,final String vehicleRegNo) {
+    private void validateCredentials(final String email, final String password,final String name, final String age,final String vehicleRegNo,String tokena) {
 
         final DatabaseReference root;
         root=FirebaseDatabase.getInstance().getReference();
@@ -159,6 +179,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     userdataMap.put("name",name);
                     userdataMap.put("age",age);
                     userdataMap.put("vehicleRegNo",vehicleRegNo);
+                    Log.d("Aaditya","this is inside the datasnapshot " + tokena);
+                    userdataMap.put("userToken", tokena);
+
+
 
 
                     root.child("users").child(userId).updateChildren(userdataMap)
