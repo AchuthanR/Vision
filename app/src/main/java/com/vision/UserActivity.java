@@ -55,14 +55,26 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View view) {
 
+                //getting the data of the respective hospital and police station
+                Log.d("Aadi","inside onclick");
+
+
+
+
                 mDatabase=FirebaseDatabase.getInstance().getReference().child("users");
                 mDatabase.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
+                        Log.d("Aadi","inside dataSnapshot");
 
+                        String token =snapshot.child("police1").child("userToken").getValue().toString();
 
+                        Log.d("Aadi","token is"+token);
 
+                        FcmNotificationsSender notificationsSender=new FcmNotificationsSender("/topics/all","TITLE","BODY",getApplicationContext(),UserActivity.this);
+
+                        notificationsSender.SendNotifications();
 
                     }
 
@@ -72,23 +84,6 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 });
 
-
-
-
-
-
-
-
-
-
-
-                //Push NOtification Part
-                String token="";
-                //this is the method to create a new notification. We have to put all the details inside this
-                FcmNotificationsSender notificationsSender=new FcmNotificationsSender(token,"TITLE","BODY",
-                        getApplicationContext(),UserActivity.this);
-
-                notificationsSender.SendNotifications();
             }
         });
     }
