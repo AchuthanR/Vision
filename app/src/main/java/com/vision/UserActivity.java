@@ -3,8 +3,13 @@ package com.vision;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.pm.PackageManager;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 import android.content.Intent;
 import android.util.Log;
@@ -13,6 +18,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -31,9 +39,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import java.util.Locale;
+
 public class UserActivity extends AppCompatActivity implements View.OnClickListener {
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
+    FusedLocationProviderClient fusedLocationProviderClient;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +57,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         mAuth = FirebaseAuth.getInstance();
 
         findViewById(R.id.logout3).setOnClickListener(this);
+        fusedLocationProviderClient= LocationServices.getFusedLocationProviderClient(this);
 
 
         //button for push notification
@@ -64,13 +78,45 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
 
                         Log.d("Aadi","inside dataSnapshot");
 
-                        String token =snapshot.child("police2").child("userToken").getValue().toString();
+                        String token =snapshot.child("Srinivasan").child("userToken").getValue().toString();
 
                         Log.d("Aadi","token is"+token);
 
-                        FcmNotificationsSender notificationsSender=new FcmNotificationsSender(token,"TITLE","BODY",getApplicationContext(),UserActivity.this);
+                        //gps location
+                        if(ActivityCompat.checkSelfPermission(UserActivity.this,
+                                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
 
-                        notificationsSender.SendNotifications();
+                            fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Location> task) {
+
+                                    Location location = task.getResult();
+                                    double latitude =location.getLatitude();
+                                    double longitude = location.getLongitude();
+
+                                    String loc = "Accident latitude is: "+latitude+" and the longitude is: "+longitude;
+                                    FcmNotificationsSender notificationsSender=new FcmNotificationsSender(token,"Location",loc,getApplicationContext(),UserActivity.this);
+
+                                    notificationsSender.SendNotifications();
+
+
+
+
+                                }
+                            });
+
+
+
+
+                        }else{
+
+                            ActivityCompat.requestPermissions(UserActivity.this,
+                                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},44);
+
+
+                        }
+
+
 
                     }
 
