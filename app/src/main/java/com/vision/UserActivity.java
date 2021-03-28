@@ -45,89 +45,98 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
     FusedLocationProviderClient fusedLocationProviderClient;
-
+    String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
-
         FirebaseMessaging.getInstance().subscribeToTopic("all");
-
         mAuth = FirebaseAuth.getInstance();
-
         findViewById(R.id.logout3).setOnClickListener(this);
         fusedLocationProviderClient= LocationServices.getFusedLocationProviderClient(this);
 
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final String userId=user.getUid();
 
-        //button for push notification
-        findViewById(R.id.Notificationbtn).setOnClickListener(new View.OnClickListener() {
+        //get the user name for searching the particular node
+        DatabaseReference ref=FirebaseDatabase.getInstance().getReference().child("search");
+        ref.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onClick(View view) {
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                //getting the data of the respective hospital and police station
-                Log.d("Aadi","inside onclick");
+                username =snapshot.child(userId).getValue().toString();
 
+            }
 
-
-
-                mDatabase=FirebaseDatabase.getInstance().getReference().child("users");
-                mDatabase.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                        Log.d("Aadi","inside dataSnapshot");
-
-                        String token =snapshot.child("Srinivasan").child("userToken").getValue().toString();
-
-                        Log.d("Aadi","token is"+token);
-
-                        //gps location
-                        if(ActivityCompat.checkSelfPermission(UserActivity.this,
-                                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-
-                            fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Location> task) {
-
-                                    Location location = task.getResult();
-                                    double latitude =location.getLatitude();
-                                    double longitude = location.getLongitude();
-
-                                    String loc = "Accident latitude is: "+latitude+" and the longitude is: "+longitude;
-                                    FcmNotificationsSender notificationsSender=new FcmNotificationsSender(token,"Location",loc,getApplicationContext(),UserActivity.this);
-
-                                    notificationsSender.SendNotifications();
-
-
-
-
-                                }
-                            });
-
-
-
-
-                        }else{
-
-                            ActivityCompat.requestPermissions(UserActivity.this,
-                                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},44);
-
-
-                        }
-
-
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
+
+
+        //monitor the change in the particular user
+        mDatabase=FirebaseDatabase.getInstance().getReference().child("users");
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                if(Integer.parseInt(snapshot.child(username).child("Accident").getValue().toString())==1){
+
+                    String token =snapshot.child("Srinivasan").child("userToken").getValue().toString();
+                    Log.d("Aadi","token is"+token);
+
+                    //gps location
+                    if(ActivityCompat.checkSelfPermission(UserActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+
+                        fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Location> task) {
+
+                                Location location = task.getResult();
+                                double latitude =location.getLatitude();
+                                double longitude = location.getLongitude();
+                                String loc = "Accident latitude is: "+latitude+" and the longitude is: "+longitude;
+                                FcmNotificationsSender notificationsSender=new FcmNotificationsSender("/topics/all","Location",loc,getApplicationContext(),UserActivity.this);
+                                notificationsSender.SendNotifications();
+
+                            }
+                        });
+
+                    }
+                    else{
+                        ActivityCompat.requestPermissions(UserActivity.this,
+                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},44);
+                    }
+
+                }
+
+
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+        //button for push notification
+
+//        findViewById(R.id.Notificationbtn).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                //getting the data of the respective hospital and police station
+//                Log.d("Aadi","inside onclick");
+//
+//
+//
+//            }
+//        });
     }
 
 

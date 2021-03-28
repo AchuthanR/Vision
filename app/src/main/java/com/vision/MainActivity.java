@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     //token creation
 
-                    // fcm settings for perticular user
+                    // fcm settings for particular user
 
                     FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
                                 @Override
@@ -134,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 }
                             });
                     Log.i("part","validation is over!");
+
 //                    String email = editTextEmail.getText().toString().trim();
 //                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 //                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users");
@@ -181,9 +182,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     userdataMap.put("vehicleRegNo",vehicleRegNo);
                     Log.d("Aaditya","this is inside the datasnapshot " + tokena);
                     userdataMap.put("userToken", tokena);
+                    userdataMap.put("Accident", 0);
                     userdataMap.put("Status", 0);
-
-
 
 
                     root.child("users").child(name).updateChildren(userdataMap)
@@ -193,8 +193,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                                     if(task.isSuccessful())
                                     {
-                                        Toast.makeText(MainActivity.this, "account is created", Toast.LENGTH_SHORT).show();
-                                        startActivity(new Intent(MainActivity.this, SignInActivity.class));
+                                        Log.i("part","entered inside if not exists!");
+                                        HashMap<String,Object> userdataMap= new HashMap<>();
+                                        userdataMap.put(userId,name);
+                                        root.child("search").updateChildren(userdataMap)
+                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        if(task.isSuccessful())
+                                                        {
+                                                            Toast.makeText(MainActivity.this, "account is created", Toast.LENGTH_SHORT).show();
+                                                            startActivity(new Intent(MainActivity.this, SignInActivity.class));
+                                                        }
+                                                        else
+                                                        {
+                                                            Toast.makeText(MainActivity.this, "network error: please try again", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    }
+                                                });
                                     }
 
                                     else
