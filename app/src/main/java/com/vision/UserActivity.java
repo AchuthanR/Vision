@@ -123,30 +123,6 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-
-        //button for push notification
-
-//        findViewById(R.id.Notificationbtn).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                //getting the data of the respective hospital and police station
-//                Log.d("Aadi","inside onclick");
-//
-//
-//
-//            }
-//        });
-    }
-
-
-
-
-
-
-
-
-
     private void Logout() {
         Log.i("Srini","insidelogout");
         mAuth.signOut();
