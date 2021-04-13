@@ -54,18 +54,18 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         FirebaseMessaging.getInstance().subscribeToTopic("all");
         mAuth = FirebaseAuth.getInstance();
         findViewById(R.id.logout3).setOnClickListener(this);
-        fusedLocationProviderClient= LocationServices.getFusedLocationProviderClient(this);
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        final String userId=user.getUid();
+        final String userId = user.getUid();
 
         //get the user name for searching the particular node
-        DatabaseReference ref=FirebaseDatabase.getInstance().getReference().child("search");
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("search");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                username =snapshot.child(userId).getValue().toString();
+                username = snapshot.child(userId).getValue().toString();
 
             }
 
@@ -77,42 +77,39 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
 
 
         //monitor the change in the particular user
-        mDatabase=FirebaseDatabase.getInstance().getReference().child("users");
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("users");
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                if(Integer.parseInt(snapshot.child(username).child("Accident").getValue().toString())==1){
+                if (Integer.parseInt(snapshot.child(username).child("Accident").getValue().toString()) == 1) {
 
-                    String token =snapshot.child("Srinivasan").child("userToken").getValue().toString();
-                    Log.d("Aadi","token is"+token);
+                    String token = snapshot.child("Srinivasan").child("userToken").getValue().toString();
+                    Log.d("Aadi", "token is" + token);
 
                     //gps location
-                    if(ActivityCompat.checkSelfPermission(UserActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+                    if (ActivityCompat.checkSelfPermission(UserActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
                         fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
                             @Override
                             public void onComplete(@NonNull Task<Location> task) {
 
                                 Location location = task.getResult();
-                                double latitude =location.getLatitude();
+                                double latitude = location.getLatitude();
                                 double longitude = location.getLongitude();
-                                String loc = "Accident latitude is: "+latitude+" and the longitude is: "+longitude;
-                                FcmNotificationsSender notificationsSender=new FcmNotificationsSender("/topics/all","Location",loc,getApplicationContext(),UserActivity.this);
+                                String loc = "Accident latitude is: " + latitude + " and the longitude is: " + longitude;
+                                FcmNotificationsSender notificationsSender = new FcmNotificationsSender("/topics/all", "Location", loc, getApplicationContext(), UserActivity.this);
                                 notificationsSender.SendNotifications();
 
                             }
                         });
 
-                    }
-                    else{
+                    } else {
                         ActivityCompat.requestPermissions(UserActivity.this,
-                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},44);
+                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 44);
                     }
 
                 }
-
-
 
 
             }
@@ -122,7 +119,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
-
+    }
     private void Logout() {
         Log.i("Srini","insidelogout");
         mAuth.signOut();
